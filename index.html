@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex justify-center items-center min-h-screen bg-gray-100">
+<div class="container border border-black p-10 h-[650px] bg-white">
+
+    <input type="file" id="fileInput" accept="image/*" class="hidden">
+
+    <div class="flex flex-row gap-6 mb-6">
+        <div class="flex flex-col bg-white w-[400px] h-[500px] p-5 gap-4 border border-black rounded">
+        <h1 class="text-black font-semibold text-2xl">Filters</h1>
+        <div class="grid grid-cols-2 gap-4">
+            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="BrightnessBtn">Brightness</button>
+            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="GrayscaleBtn">Grayscale</button>
+            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="InversionBtn">Inversion</button>
+            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="SaturationBtn">Saturation</button>
+            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="SepiaBtn">Sepia</button>
+            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="BlurBtn">Blur</button>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <span class="text-black text-2xl" id="ValueName">Brightness</span>
+                <span id="Value" class="text-black text-base">100%</span>
+            </div>
+            <input type="range" step="2" id="ValueSlider" min="0" max="200" value="100" class="w-full h-2 mt-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500">
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <span class="text-black text-2xl">Rotate & Flip</span>
+            <div class="flex flex-row gap-2">
+                <button id="rotateLeftBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">↶</button>
+                <button id="rotateRightBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">↷</button>
+                <button id="flipHorizontalBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">⇄</button>
+                <button id="flipVerticalBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">⇅</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="imageContainer" class="flex justify-center items-center flex-1 h-[500px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+        <img id="displayImage" class="max-w-full max-h-full object-contain hidden" alt="Selected image">
+        <span id="placeholderText" class="text-gray-400 text-xl">No image selected</span>
+    </div>
+</div>
+
+    <div class="flex flex-row mt-6 gap-2">
+        <button class="bg-white p-4 rounded-sm hover:bg-blue-50 border border-black">RESET FILTERS</button>
+        <button id="chooseImageBtn" class="bg-gray-700 text-white p-4 rounded-sm border border-black ml-auto hover:bg-gray-600">CHOOSE IMAGE</button>
+        <button class="bg-blue-600 text-white p-4 rounded-sm border border-black">SAVE IMAGE</button>
+    </div>
+</div>
+
+
+<script src="script.js"></script>
+</body>
+</html>
