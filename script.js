@@ -33,6 +33,47 @@ let rotate = 0; // in degrees
 let flipHorizontal = 1; // 1 or -1
 let flipVertical = 1; // 1 or -1
 
+let history = [];
+let currentHistoryIndex = -1;
+
+function createState(description) {
+    return {
+        filterState: { ...filterState },
+        rotate: rotate,
+        flipHorizontal: flipHorizontal,
+        flipVertical: flipVertical,
+        description: description
+    };
+}
+
+function saveState(description) {
+    if (currentHistoryIndex < history.length - 1) {
+        history = history.slice(0, currentHistoryIndex + 1);
+    }
+    
+    history.push(createState(description));
+    currentHistoryIndex = history.length - 1;
+    
+    updateHistoryUI();
+    updateUndoRedoButtons();
+}
+
+function restoreState(state) {
+    filterState = { ...state.filterState };
+    rotate = state.rotate;
+    flipHorizontal = state.flipHorizontal;
+    flipVertical = state.flipVertical;
+    
+    valueSlider.value = filterState[currentFilter];
+    if (currentFilter === 'blur') {
+        value.textContent = filterState[currentFilter] + 'px';
+    } else {
+        value.textContent = filterState[currentFilter] + '%';
+    }
+    
+    applyFilters();
+}
+
 function applyFilters() {
     const filterString = `
         brightness(${filterState.brightness}%)
@@ -48,6 +89,8 @@ function applyFilters() {
     displayImage.style.transform = transformString;
 }
 
+let isSliding = false;
+
 valueSlider.addEventListener('input', (e) => {
     const sliderValue = e.target.value;
 
@@ -60,6 +103,17 @@ valueSlider.addEventListener('input', (e) => {
     filterState[currentFilter] = sliderValue;
 
     applyFilters();
+    isSliding = true;
+});
+
+valueSlider.addEventListener('change', (e) => {
+    if (isSliding) {
+        const filterName = currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1);
+        const sliderValue = e.target.value;
+        const unit = currentFilter === 'blur' ? 'px' : '%';
+        saveState(`${filterName}: ${sliderValue}${unit}`);
+        isSliding = false;
+    }
 });
 
 brightnessButton.addEventListener('click', () => {
@@ -147,6 +201,21 @@ fileInput.addEventListener('change', (e) => {
             displayImage.src = event.target.result;
             displayImage.classList.remove('hidden');
             placeholderText.classList.add('hidden');
+            filterState = {
+                brightness: 100,
+                grayscale: 0,
+                inversion: 0,
+                saturation: 100,
+                sepia: 0,
+                blur: 0
+            };
+            rotate = 0;
+            flipHorizontal = 1;
+            flipVertical = 1;
+            
+            history = [];
+            currentHistoryIndex = -1;
+            saveState('Initial State');
 
             applyFilters();
         };
@@ -157,19 +226,116 @@ fileInput.addEventListener('change', (e) => {
 rotateLeftBtn.addEventListener('click', () => {
     rotate -= 90;
     applyFilters();
+    saveState('Rotate Left 90°');
 });
 
 rotateRightBtn.addEventListener('click', () => {
     rotate += 90; 
     applyFilters();
+    saveState('Rotate Right 90°');
 });
 
 flipHorizontalBtn.addEventListener('click', () => {
     flipHorizontal *= -1; 
     applyFilters();
+    saveState('Flip Horizontal');
 });
 
 flipVerticalBtn.addEventListener('click', () => {
     flipVertical *= -1; 
     applyFilters();
+    saveState('Flip Vertical');
+});
+
+// Undo/Redo functionality
+function undo() {
+    if (currentHistoryIndex > 0) {
+        currentHistoryIndex--;
+        restoreState(history[currentHistoryIndex]);
+        updateHistoryUI();
+        updateUndoRedoButtons();
+    }
+}
+
+function redo() {
+    if (currentHistoryIndex < history.length - 1) {
+        currentHistoryIndex++;
+        restoreState(history[currentHistoryIndex]);
+        updateHistoryUI();
+        updateUndoRedoButtons();
+    }
+}
+
+function updateUndoRedoButtons() {
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    
+    if (undoBtn) {
+        undoBtn.disabled = currentHistoryIndex <= 0;
+        if (undoBtn.disabled) {
+            undoBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            undoBtn.classList.remove('hover:bg-gray-100');
+        } else {
+            undoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            undoBtn.classList.add('hover:bg-gray-100');
+        }
+    }
+    
+    if (redoBtn) {
+        redoBtn.disabled = currentHistoryIndex >= history.length - 1;
+        if (redoBtn.disabled) {
+            redoBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            redoBtn.classList.remove('hover:bg-gray-100');
+        } else {
+            redoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            redoBtn.classList.add('hover:bg-gray-100');
+        }
+    }
+}
+
+function updateHistoryUI() {
+    const historyPanel = document.getElementById('historyPanel');
+    if (!historyPanel) return;
+    
+    historyPanel.innerHTML = '';
+    
+    history.forEach((state, index) => {
+        const historyItem = document.createElement('div');
+        historyItem.className = `p-3 mb-2 border border-gray-300 rounded cursor-pointer transition-colors ${
+            index === currentHistoryIndex 
+                ? 'bg-blue-500 text-white border-blue-600' 
+                : 'bg-white hover:bg-gray-100'
+        }`;
+        
+        historyItem.innerHTML = `
+            <div class="font-semibold">${state.description}</div>
+            <div class="text-sm ${index === currentHistoryIndex ? 'text-blue-100' : 'text-gray-600'}">
+                Step ${index + 1}
+            </div>
+        `;
+        
+        historyItem.addEventListener('click', () => {
+            currentHistoryIndex = index;
+            restoreState(history[index]);
+            updateHistoryUI();
+            updateUndoRedoButtons();
+        });
+        
+        historyPanel.appendChild(historyItem);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    
+    if (undoBtn) {
+        undoBtn.addEventListener('click', undo);
+    }
+    
+    if (redoBtn) {
+        redoBtn.addEventListener('click', redo);
+    }
+    
+    updateUndoRedoButtons();
 });
