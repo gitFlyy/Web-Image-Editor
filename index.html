@@ -3,64 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Assignment 1</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="flex justify-center items-center min-h-screen bg-gray-100">
-<div class="container border border-black p-10 h-[650px] bg-white">
+<body>
+<div class="container">
 
-    <input type="file" id="fileInput" accept="image/*" class="hidden">
+    <input type="file" id="fileInput" accept="image/*">
 
-    <div class="flex flex-row gap-6 mb-6">
-        <div class="flex flex-col bg-white w-[400px] h-[500px] p-5 gap-4 border border-black rounded">
-        <h1 class="text-black font-semibold text-2xl">Filters</h1>
-        <div class="grid grid-cols-2 gap-4">
-            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="BrightnessBtn">Brightness</button>
-            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="GrayscaleBtn">Grayscale</button>
-            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="InversionBtn">Inversion</button>
-            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="SaturationBtn">Saturation</button>
-            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="SepiaBtn">Sepia</button>
-            <button class="bg-white p-4 rounded border hover:bg-blue-50 border-black" id="BlurBtn">Blur</button>
+    <div class="main-content">
+        <div class="filters-panel">
+        <h1 class="panel-title">Filters</h1>
+        <div class="filter-buttons">
+            <button class="filter-btn" id="BrightnessBtn">Brightness</button>
+            <button class="filter-btn" id="GrayscaleBtn">Grayscale</button>
+            <button class="filter-btn" id="InversionBtn">Inversion</button>
+            <button class="filter-btn" id="SaturationBtn">Saturation</button>
+            <button class="filter-btn" id="SepiaBtn">Sepia</button>
+            <button class="filter-btn" id="BlurBtn">Blur</button>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-                <span class="text-black text-2xl" id="ValueName">Brightness</span>
-                <span id="Value" class="text-black text-base">100%</span>
+        <div class="slider-container">
+            <div class="slider-header">
+                <span class="value-name" id="ValueName">Brightness</span>
+                <span id="Value" class="value-display">100%</span>
             </div>
-            <input type="range" step="2" id="ValueSlider" min="0" max="200" value="100" class="w-full h-2 mt-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <input type="range" step="2" id="ValueSlider" min="0" max="200" value="100" class="slider">
         </div>
 
-        <div class="flex flex-col gap-4">
-            <span class="text-black text-2xl">Rotate & Flip</span>
-            <div class="flex flex-row gap-2">
-                <button id="rotateLeftBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">↶</button>
-                <button id="rotateRightBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">↷</button>
-                <button id="flipHorizontalBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">⇄</button>
-                <button id="flipVerticalBtn" class="bg-white pl-7 pr-7 p-3 rounded hover:bg-blue-50 border border-black">⇅</button>
+        <div class="transform-container">
+            <span class="transform-title">Rotate & Flip</span>
+            <div class="transform-buttons">
+                <button id="rotateLeftBtn" class="transform-btn">↶</button>
+                <button id="rotateRightBtn" class="transform-btn">↷</button>
+                <button id="flipHorizontalBtn" class="transform-btn">⇄</button>
+                <button id="flipVerticalBtn" class="transform-btn">⇅</button>
             </div>
         </div>
     </div>
 
-    <div id="imageContainer" class="flex justify-center items-center flex-1 h-[500px] bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
-        <img id="displayImage" class="max-w-full max-h-full object-contain hidden" alt="Selected image">
-        <span id="placeholderText" class="text-gray-400 text-xl">No image selected</span>
+    <div id="imageContainer" class="image-container">
+        <img id="displayImage" class="display-image hidden" alt="Selected image">
+        <span id="placeholderText" class="placeholder-text">No image selected</span>
     </div>
 
     <!-- history panel -->
-    <div class="flex flex-col bg-white w-[300px] h-[500px] p-5 gap-4 border border-black rounded">
-        <h1 class="text-black font-semibold text-2xl">History</h1>
-        <div id="historyPanel" class="flex flex-col overflow-y-auto flex-1">
+    <div class="history-panel">
+        <h1 class="panel-title">History</h1>
+        <div id="historyPanel" class="history-list">
         </div>
     </div>
 </div>
 
-    <div class="flex flex-row mt-6 gap-2">
-        <button class="bg-white p-4 rounded-sm hover:bg-blue-50 border border-black">RESET FILTERS</button>
-        <button id="undoBtn" class="bg-white p-4 rounded-sm hover:bg-gray-100 border border-black">↶ UNDO</button>
-        <button id="redoBtn" class="bg-white p-4 rounded-sm hover:bg-gray-100 border border-black">↷ REDO</button>
-        <button id="chooseImageBtn" class="bg-gray-700 text-white p-4 rounded-sm border border-black ml-auto hover:bg-gray-600">CHOOSE IMAGE</button>
-        <button class="bg-blue-600 text-white p-4 rounded-sm border border-black">SAVE IMAGE</button>
+    <div class="button-row">
+        <button class="btn btn-white">RESET FILTERS</button>
+        <button id="undoBtn" class="btn btn-undo-redo">↶ UNDO</button>
+        <button id="redoBtn" class="btn btn-undo-redo">↷ REDO</button>
+        <button id="chooseImageBtn" class="btn btn-dark">CHOOSE IMAGE</button>
+        <button class="btn btn-primary">SAVE IMAGE</button>
     </div>
 </div>
 

@@ -123,9 +123,8 @@ brightnessButton.addEventListener('click', () => {
     valueSlider.max = '200';
     valueSlider.value = filterState.brightness;
     value.textContent = filterState.brightness + '%';
-    allButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-    brightnessButton.classList.add('bg-blue-500', 'text-white');
-    brightnessButton.classList.remove('hover:bg-blue-50');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    brightnessButton.classList.add('active');
 });
 
 grayscaleButton.addEventListener('click', () => {
@@ -135,9 +134,8 @@ grayscaleButton.addEventListener('click', () => {
     valueSlider.max = '100';
     valueSlider.value = filterState.grayscale;
     value.textContent = filterState.grayscale + '%';
-    allButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-    grayscaleButton.classList.add('bg-blue-500', 'text-white');
-    grayscaleButton.classList.remove('hover:bg-blue-50');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    grayscaleButton.classList.add('active');
 });
 
 inversionButton.addEventListener('click', () => {
@@ -147,9 +145,8 @@ inversionButton.addEventListener('click', () => {
     valueSlider.max = '100';
     valueSlider.value = filterState.inversion;
     value.textContent = filterState.inversion + '%';
-    allButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-    inversionButton.classList.add('bg-blue-500', 'text-white');
-    inversionButton.classList.remove('hover:bg-blue-50');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    inversionButton.classList.add('active');
 });
 
 saturationButton.addEventListener('click', () => {
@@ -159,9 +156,8 @@ saturationButton.addEventListener('click', () => {
     valueSlider.max = '200';
     valueSlider.value = filterState.saturation;
     value.textContent = filterState.saturation + '%';
-    allButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-    saturationButton.classList.add('bg-blue-500', 'text-white');
-    saturationButton.classList.remove('hover:bg-blue-50');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    saturationButton.classList.add('active');
 });
 
 sepiaButton.addEventListener('click', () => {
@@ -171,9 +167,8 @@ sepiaButton.addEventListener('click', () => {
     valueSlider.max = '100';
     valueSlider.value = filterState.sepia;
     value.textContent = filterState.sepia + '%';
-    allButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-    sepiaButton.classList.add('bg-blue-500', 'text-white');
-    sepiaButton.classList.remove('hover:bg-blue-50');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    sepiaButton.classList.add('active');
 });
 
 blurButton.addEventListener('click', () => {
@@ -183,9 +178,8 @@ blurButton.addEventListener('click', () => {
     valueSlider.max = '20';
     valueSlider.value = filterState.blur;
     value.textContent = filterState.blur + 'px';
-    allButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-    blurButton.classList.add('bg-blue-500', 'text-white');
-    blurButton.classList.remove('hover:bg-blue-50');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    blurButton.classList.add('active');
 });
 
 
@@ -272,24 +266,10 @@ function updateUndoRedoButtons() {
     
     if (undoBtn) {
         undoBtn.disabled = currentHistoryIndex <= 0;
-        if (undoBtn.disabled) {
-            undoBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            undoBtn.classList.remove('hover:bg-gray-100');
-        } else {
-            undoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            undoBtn.classList.add('hover:bg-gray-100');
-        }
     }
     
     if (redoBtn) {
         redoBtn.disabled = currentHistoryIndex >= history.length - 1;
-        if (redoBtn.disabled) {
-            redoBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            redoBtn.classList.remove('hover:bg-gray-100');
-        } else {
-            redoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            redoBtn.classList.add('hover:bg-gray-100');
-        }
     }
 }
 
@@ -301,15 +281,13 @@ function updateHistoryUI() {
     
     history.forEach((state, index) => {
         const historyItem = document.createElement('div');
-        historyItem.className = `p-3 mb-2 border border-gray-300 rounded cursor-pointer transition-colors ${
-            index === currentHistoryIndex 
-                ? 'bg-blue-500 text-white border-blue-600' 
-                : 'bg-white hover:bg-gray-100'
-        }`;
+        historyItem.className = index === currentHistoryIndex 
+            ? 'history-item active' 
+            : 'history-item';
         
         historyItem.innerHTML = `
-            <div class="font-semibold">${state.description}</div>
-            <div class="text-sm ${index === currentHistoryIndex ? 'text-blue-100' : 'text-gray-600'}">
+            <div class="history-item-title">${state.description}</div>
+            <div class="history-item-step">
                 Step ${index + 1}
             </div>
         `;
