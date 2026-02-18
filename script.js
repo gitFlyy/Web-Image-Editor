@@ -303,6 +303,83 @@ function updateHistoryUI() {
     });
 }
 
+const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', () => {
+        filterState = {
+            brightness: 100,
+            grayscale: 0,
+            inversion: 0,
+            saturation: 100,
+            sepia: 0,
+            blur: 0
+        };
+        rotate = 0;
+        flipHorizontal = 1;
+        flipVertical = 1;
+
+        valueSlider.value = filterState[currentFilter];
+        if (currentFilter === 'blur') {
+            value.textContent = filterState[currentFilter] + 'px';
+        } else {
+            value.textContent = filterState[currentFilter] + '%';
+        }
+        
+        applyFilters();
+        saveState('Reset All Filters');
+    });
+}
+
+const saveImageBtn = document.getElementById('saveImageBtn');
+if (saveImageBtn) {
+    saveImageBtn.addEventListener('click', () => {
+        if (displayImage.src && !displayImage.classList.contains('hidden')) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const img = new Image();
+            img.src = displayImage.src;
+            
+            img.onload = () => {
+                const isRotated90or270 = Math.abs(rotate % 180) === 90;
+                canvas.width = isRotated90or270 ? img.naturalHeight : img.naturalWidth;
+                canvas.height = isRotated90or270 ? img.naturalWidth : img.naturalHeight;
+                
+                ctx.save();
+                
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+
+                ctx.rotate((rotate * Math.PI) / 180);
+                ctx.scale(flipHorizontal, flipVertical);
+
+                ctx.filter = `
+                    brightness(${filterState.brightness}%)
+                    grayscale(${filterState.grayscale}%)
+                    invert(${filterState.inversion}%)
+                    saturate(${filterState.saturation}%)
+                    sepia(${filterState.sepia}%)
+                    blur(${filterState.blur}px)
+                `;
+
+                ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+                ctx.restore();
+
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'edited-image.png';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            };
+        } else {
+            alert('Please select an image first!');
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const undoBtn = document.getElementById('undoBtn');
     const redoBtn = document.getElementById('redoBtn');
