@@ -17,6 +17,8 @@ body {
     border: 1px solid black;
     padding: 40px;
     height: 650px;
+    width: 100%;
+    max-width: 1600px;
     background-color: white;
 }
 
@@ -293,4 +295,79 @@ body {
     display: none;
 }
 
+@media screen and (max-width: 768px) {
+    body {
+        align-items: flex-start;
+        padding: 10px;
+    }
 
+    .container {
+        width: 100%;
+        padding: 15px;
+        height: auto;
+    }
+
+    .main-content {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .filters-panel,
+    .history-panel,
+    .image-container {
+        width: 100%;
+        height: auto;
+        min-height: 400px;
+    }
+
+    .filters-panel {
+        min-height: auto;
+    }
+
+    .panel-title {
+        font-size: 20px;
+    }
+
+    .value-name,
+    .transform-title {
+        font-size: 18px;
+    }
+
+    .filter-buttons {
+        gap: 12px;
+    }
+
+    .filter-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .transform-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .transform-btn {
+        padding: 10px 24px;
+    }
+
+    .button-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 12px;
+        font-size: 14px;
+        flex: 1 1 calc(50% - 5px);
+        min-width: 120px;
+    }
+
+    .btn-dark {
+        margin-left: 0;
+    }
+
+    .placeholder-text {
+        font-size: 16px;
+    }
+}
